@@ -1,0 +1,4 @@
+#!/bin/bash
+ec2-describe-images | grep `date --date="4 days ago" +%Y-%m-%d` | awk '{print "Deregistering-> " $2; system("ec2-deregister " $2)}'
+ec2-describe-instances | grep instance | awk '{print "Creating -> " $3; system("ec2-create-image --name " $5 "-$(date +%F) --no-reboot " $3)}'
+ec2-describe-snapshots | sort -k 5 | awk '{print "Deleting-> " $2; system("ec2-delete-snapshot " $2)}'
