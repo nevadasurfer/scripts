@@ -1,0 +1,10 @@
+#!/bin/bash
+aws ec2 create-image --region=us-west-2 --instance-id=i-acc8cea1 --name=smtp`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-549d8b5c --name=vms`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-e9c6c0e4 --name=remine`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-86014d8b --name=encoder`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-099c8a01 --name=uploader`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-ee2a32e5 --name=powerspeaking`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-caf27103 --name=vmsv2`date +%m%d%y` --no-reboot
+aws ec2 create-image --region=us-west-2 --instance-id=i-2c2a3227 --name=filmlauchr`date +%m%d%y` --no-reboot
+
