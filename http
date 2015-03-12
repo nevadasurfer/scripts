@@ -1,6 +1,11 @@
 #!/usr/bin/ruby
-require "open-uri"
-open("https://nwmuatatm.authoria.net") do |f|
-puts f.base_uri 
-puts f.status 
-end
+require 'open-uri'
+IO.foreach(ARGV[0]) { |line| open(line){ |f| print f.status } }
+
+#f = open('sites') { |f| f.read }
+#puts f
+#f = open('sites') { |f| f.read }
+#open(#{f}) do |f|)
+#puts f.base_uri 
+#puts f.status 
+#end
