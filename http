@@ -1,0 +1,6 @@
+#!/usr/bin/ruby
+require "open-uri"
+open("https://nwmuatatm.authoria.net") do |f|
+puts f.base_uri 
+puts f.status 
+end
