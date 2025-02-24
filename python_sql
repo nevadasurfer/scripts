@@ -1,0 +1,65 @@
+import os
+import psycopg2
+import logging
+import json
+import sys
+import psycopg2.sql as sql
+from psycopg2 import OperationalError, ProgrammingError
+
+def lambda_handler(event, context):
+    
+    username = os.environ['username']
+    password = os.environ['password']
+    rds_endpoint = os.environ["rds_endpoint"]
+    db_name = os.environ["db_name"]
+    extensions = json.loads(os.environ["extensions"])
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        conn = psycopg2.connect(
+        host=rds_endpoint,
+        database=db_name,
+        user=username,
+        password=password
+    )
+    
+    except OperationalError as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f"Database connection error: {str(e)}")
+        }
+
+    logger.info("Succesfully connected to RDS gitlab DB")
+
+    cur = conn.cursor()
+    results = []
+    ok = True
+
+    for e in extensions:
+        print(e)
+        try:
+            query = sql.SQL("CREATE EXTENSION IF NOT EXISTS {}").format(
+                sql.Identifier(e)
+            )
+            cur.execute(query)
+            results.append(f"Extension {e} created successfully.")
+        except ProgrammingError as pe:
+            conn.rollback()
+            results.append(f"Error creating extension {e}: {str(pe)}")
+            ok = False
+        except Exception as exc:
+            conn.rollback()
+            results.append(f"Unexpected error with extension {e}: {str(exc)}")
+            ok = False
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+    is_it_ok = 200 if ok else 400
+
+    return {
+        'statusCode': is_it_ok,
+        'body': json.dumps(results)
+    }
